@@ -50,6 +50,7 @@ class User extends Model implements AuthenticatableContract,
         return $this->belongsToMany(User::class, 'user_follow', 'user_id', 'follow_id')->withTimestamps();
         }
     
+    
     public function followers()
     
         {
@@ -108,5 +109,12 @@ class User extends Model implements AuthenticatableContract,
     return $this->followings()->where('follow_id', $userId)->exists();
     }
 
+public function feed_microposts()
+    {
+        $follow_user_ids = $this->followings()->lists('users.id')->toArray();
+        $follow_user_ids[] = $this->id;
+        return Micropost::whereIn('user_id', $follow_user_ids);
+    }
+    
 }
 
