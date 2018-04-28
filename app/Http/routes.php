@@ -29,7 +29,16 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('unfollow', 'UserFollowController@destroy')->name('user.unfollow');
         Route::get('followings', 'UsersController@followings')->name('users.followings');
         Route::get('followers', 'UsersController@followers')->name('users.followers');
+        
     });
 
     Route::resource('microposts', 'MicropostsController', ['only' => ['store', 'destroy']]);
+});
+
+// http://36700cb7fb2048e0a69a7053b7d98cff.vfs.cloud9.us-east-2.amazonaws.com/microposts/1/favorite
+// http://your-domain.com/microposts/{id}/favorite <- id = MicropostのID
+Route::group(['prefix' => 'microposts/{id}'], function () { 
+    Route::post('favorite', 'MicropostFavoriteController@store')->name('micropost.favorite');
+    Route::delete('unfavorite', 'MicropostFavoriteController@destroy')->name('micropost.unfavorite');
+    Route::get('favorites', 'UsersController@favorites')->name('users.favorites');
 });
